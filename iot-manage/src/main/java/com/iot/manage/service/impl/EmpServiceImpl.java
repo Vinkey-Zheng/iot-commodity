@@ -1,0 +1,127 @@
+package com.iot.manage.service.impl;
+
+import com.iot.common.utils.DateUtils;
+import com.iot.manage.domain.Emp;
+import com.iot.manage.domain.Role;
+import com.iot.manage.mapper.EmpMapper;
+import com.iot.manage.mapper.RegionMapper;
+import com.iot.manage.mapper.RoleMapper;
+import com.iot.manage.service.IEmpService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * 人员列表Service业务层处理
+ *
+ * @author zmq
+ * @date 2024-03-21
+ */
+@Service
+public class EmpServiceImpl implements IEmpService
+{
+    @Autowired
+    private EmpMapper empMapper;
+
+    @Autowired
+    private RegionMapper regionMapper;
+
+    @Autowired
+    private RoleMapper roleMapper;
+
+    /**
+     * 查询人员列表
+     *
+     * @param id 人员列表主键
+     * @return 人员列表
+     */
+    @Override
+    @Cacheable(key = "'emp:' + #id")
+    public Emp selectEmpById(Long id)
+    {
+        return empMapper.selectEmpById(id);
+    }
+
+    /**
+     * 查询人员列表列表
+     *
+     * @param emp 人员列表
+     * @return 人员列表
+     */
+    @Override
+    @Cacheable(key = "'empList:' + #emp")
+    public List<Emp> selectEmpList(Emp emp)
+    {
+        return empMapper.selectEmpList(emp);
+    }
+
+    /**
+     * 新增人员列表
+     *
+     * @param emp 人员列表
+     * @return 结果
+     */
+    @Override
+    @CachePut
+    public int insertEmp(Emp emp)
+    {
+        // 补充区域名称
+        emp.setRegionName(regionMapper.selectRegionById(emp.getRegionId()).getRegionName());
+        // 补充角色信息
+        Role role = roleMapper.selectRoleByRoleId(emp.getRoleId());
+        emp.setRoleName(role.getRoleName());
+        emp.setRoleCode(role.getRoleCode());
+        emp.setCreateTime(DateUtils.getNowDate());
+        return empMapper.insertEmp(emp);
+    }
+
+    /**
+     * 修改人员列表
+     *
+     * @param emp 人员列表
+     * @return 结果
+     */
+    @Override
+    @CachePut
+    public int updateEmp(Emp emp)
+    {
+        // 补充区域名称
+        emp.setRegionName(regionMapper.selectRegionById(emp.getRegionId()).getRegionName());
+        // 补充角色信息
+        Role role = roleMapper.selectRoleByRoleId(emp.getRoleId());
+        emp.setRoleName(role.getRoleName());
+        emp.setRoleCode(role.getRoleCode());
+        emp.setUpdateTime(DateUtils.getNowDate());
+        return empMapper.updateEmp(emp);
+    }
+
+    /**
+     * 批量删除人员列表
+     *
+     * @param ids 需要删除的人员列表主键
+     * @return 结果
+     */
+    @Override
+    @CacheEvict
+    public int deleteEmpByIds(Long[] ids)
+    {
+        return empMapper.deleteEmpByIds(ids);
+    }
+
+    /**
+     * 删除人员列表信息
+     *
+     * @param id 人员列表主键
+     * @return 结果
+     */
+    @Override
+    @CacheEvict
+    public int deleteEmpById(Long id)
+    {
+        return empMapper.deleteEmpById(id);
+    }
+}

@@ -24,7 +24,11 @@ public class Region extends BaseEntity
     @Excel(name = "区域名称")
     private String regionName;
 
-//    由于toString方法中涉及部分父类(BaseEntity)的字段，因此，不采用data完全覆盖，保留toString方法
+    /**
+     * 由于toString方法中涉及部分父类(BaseEntity)的字段，
+     * 因此，不采用data完全覆盖，保留toString方法
+     */
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

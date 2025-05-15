@@ -35,6 +35,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <association property="partner" javaType="Partner" column="partner_id" select="selectPartnerById"/>
     </resultMap>
 
+    <!-- 这段代码表示 NodeVo 对象中的 region 属性是一个 Region 类型的对象，
+    MyBatis 会调用 selectRegionById 方法（可以是当前 mapper 或其他 mapper 中定义的方法），
+    根据 region_id 查询对应的 Region 数据并赋值给 region 属性。-->
+
     <sql id="selectNodeVo">
         select id, node_name, address, business_type, region_id, partner_id, create_time, update_time, create_by, update_by, remark from tb_node
     </sql>

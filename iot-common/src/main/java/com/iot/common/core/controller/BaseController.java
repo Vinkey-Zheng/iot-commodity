@@ -1,25 +1,22 @@
 package com.iot.common.core.controller;
 
-import java.beans.PropertyEditorSupport;
-import java.util.Date;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.iot.common.constant.HttpStatus;
 import com.iot.common.core.domain.AjaxResult;
 import com.iot.common.core.domain.model.LoginUser;
-import com.iot.common.core.page.PageDomain;
 import com.iot.common.core.page.TableDataInfo;
-import com.iot.common.core.page.TableSupport;
 import com.iot.common.utils.DateUtils;
 import com.iot.common.utils.PageUtils;
 import com.iot.common.utils.SecurityUtils;
 import com.iot.common.utils.StringUtils;
-import com.iot.common.utils.sql.SqlUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+
+import java.beans.PropertyEditorSupport;
+import java.util.Date;
+import java.util.List;
 
 /**
  * web层通用数据处理
@@ -56,19 +53,6 @@ public class BaseController
     }
 
     /**
-     * 设置请求排序数据
-     */
-    protected void startOrderBy()
-    {
-        PageDomain pageDomain = TableSupport.buildPageRequest();
-        if (StringUtils.isNotEmpty(pageDomain.getOrderBy()))
-        {
-            String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
-            PageHelper.orderBy(orderBy);
-        }
-    }
-
-    /**
      * 清理分页的线程变量
      */
     protected void clearPage()
@@ -82,7 +66,7 @@ public class BaseController
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected TableDataInfo getDataTable(List<?> list)
     {
-        TableDataInfo rspData = new TableDataInfo();
+        TableDataInfo rspData = new TableDataInfo(list, 0);
         rspData.setCode(HttpStatus.SUCCESS);
         rspData.setMsg("查询成功");
         rspData.setRows(list);
@@ -91,35 +75,26 @@ public class BaseController
     }
 
     /**
-     * 返回成功
-     */
-    public AjaxResult success()
-    {
-        return AjaxResult.success();
-    }
-
-    /**
-     * 返回失败消息
-     */
-    public AjaxResult error()
-    {
-        return AjaxResult.error();
-    }
-
-    /**
      * 返回成功消息
+     * @param message 消息内容
      */
     public AjaxResult success(String message)
     {
         return AjaxResult.success(message);
     }
+
+    public static AjaxResult success(Object data){
+        return new AjaxResult(HttpStatus.SUCCESS, "操作成功", data);
+    }
     
     /**
      * 返回成功消息
+     * @param message 消息内容
+     * @param data 数据
      */
-    public AjaxResult success(Object data)
+    public AjaxResult success(String message, Object data)
     {
-        return AjaxResult.success(data);
+        return AjaxResult.success(message, data);
     }
 
     /**
@@ -139,25 +114,12 @@ public class BaseController
     }
 
     /**
-     * 响应返回结果
-     * 
-     * @param rows 影响行数
-     * @return 操作结果
+     *
+     * @param data 返回的数据对象
+     * @return AjaxResult 包含操作结果的封装对象
      */
-    protected AjaxResult toAjax(int rows)
-    {
-        return rows > 0 ? AjaxResult.success() : AjaxResult.error();
-    }
-
-    /**
-     * 响应返回结果
-     * 
-     * @param result 结果
-     * @return 操作结果
-     */
-    protected AjaxResult toAjax(boolean result)
-    {
-        return result ? success() : error();
+    public AjaxResult toAjax(Object data){
+        return AjaxResult.success("操作成功！",data);
     }
 
     /**

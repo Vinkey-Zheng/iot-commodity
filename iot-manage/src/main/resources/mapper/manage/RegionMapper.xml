@@ -6,23 +6,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 结果集映射 -->
     <resultMap type="Region" id="RegionResult">
-        <result property="id"    column="id"    />
-        <result property="regionName"    column="region_name"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="remark"    column="remark"    />
+        <result property="id" column="id" />
+        <result property="regionName" column="region_name" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateBy" column="update_by" />
+        <result property="remark" column="remark" />
     </resultMap>
 
+    <!-- 定义基础查询字段，用于RegionVo数据检索 -->
     <sql id="selectRegionVo">
         select id, region_name, create_time, update_time, create_by, update_by, remark from tb_region
     </sql>
 
+    <!--
+        select 标签：用于定义查询语句。
+        id 属性：对应 RegionMapper.java 接口中的方法名，这里是 selectRegionList。
+        parameterType 属性：指定传入参数的类型，这里是 Region 对象。
+        resultMap 属性：指定返回值映射的结果集，这里是 RegionResult（映射到 Region 对象）。
+
+        <include> 标签：引用其他 SQL 片段，这里是复用 selectRegionVo 定义的基础查询字段。
+        <where> 标签：动态生成 WHERE 子句，仅在条件成立时添加。
+        <if test="regionName != null and regionName != ''">：当 regionName 不为空时追加查询条件，
+            使用 like 模糊匹配数据库中的 region_name 字段。
+    -->
     <select id="selectRegionList" parameterType="Region" resultMap="RegionResult">
         <include refid="selectRegionVo"/>
         <where>
-            <if test="regionName != null  and regionName != ''"> and region_name like concat('%', #{regionName}, '%')</if>
+            <if test="regionName != null and regionName != ''"> and region_name like concat('%', #{regionName}, '%')</if>
         </where>
     </select>
 
@@ -30,8 +42,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectRegionVo"/>
         where id = #{id}
     </select>
+
+    <!--
+        resultMap 与 resultType 的区别：
+        - resultType：适用于简单对象或数据库字段与对象属性自动匹配的情况，直接指定返回类型。
+        - resultMap：适用于复杂映射关系的情况，比如字段名不一致、嵌套对象等，需要手动配置映射关系。
+    -->
     <select id="selectRegionVoList" resultType="RegionVo">
-        SELECT r.*, COUNT(n.id) AS node_count FROM tb_region r LEFT JOIN tb_node n ON r.id = n.region_id
+        SELECT r.*, COUNT(n.id) AS node_count
+        FROM tb_region r
+        LEFT JOIN tb_node n ON r.id = n.region_id
         <where>
             <if test="regionName != null  and regionName != ''"> and r.region_name like concat('%', #{regionName}, '%')</if>
         </where>

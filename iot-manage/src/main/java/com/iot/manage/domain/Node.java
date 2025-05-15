@@ -1,5 +1,6 @@
 package com.iot.manage.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.iot.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.iot.common.core.domain.BaseEntity;
  * @author zmq
  * @date 2025-03-20
  */
+@Data
 public class Node extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -37,61 +39,6 @@ public class Node extends BaseEntity
     /** 合作商ID */
     @Excel(name = "合作商ID")
     private Long partnerId;
-
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setNodeName(String nodeName) 
-    {
-        this.nodeName = nodeName;
-    }
-
-    public String getNodeName() 
-    {
-        return nodeName;
-    }
-    public void setAddress(String address) 
-    {
-        this.address = address;
-    }
-
-    public String getAddress() 
-    {
-        return address;
-    }
-    public void setBusinessType(Long businessType) 
-    {
-        this.businessType = businessType;
-    }
-
-    public Long getBusinessType() 
-    {
-        return businessType;
-    }
-    public void setRegionId(Long regionId) 
-    {
-        this.regionId = regionId;
-    }
-
-    public Long getRegionId() 
-    {
-        return regionId;
-    }
-    public void setPartnerId(Long partnerId) 
-    {
-        this.partnerId = partnerId;
-    }
-
-    public Long getPartnerId() 
-    {
-        return partnerId;
-    }
 
     @Override
     public String toString() {

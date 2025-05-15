@@ -49,8 +49,8 @@ public class RegionController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Region region)
     {
-        List<Region> list = regionService.selectRegionList(region);
-        ExcelUtil<Region> util = new ExcelUtil<Region>(Region.class);
+        List<RegionVo> list = regionService.selectRegionVoList(region);
+        ExcelUtil<RegionVo> util = new ExcelUtil<RegionVo>(RegionVo.class);
         util.exportExcel(response, list, "区域管理数据");
     }
 

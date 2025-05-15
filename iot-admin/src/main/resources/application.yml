@@ -103,12 +103,17 @@ token:
 
 # MyBatis配置
 mybatis:
-  # 搜索指定包别名
+  # 配置 MyBatis 的类型别名包路径，用于自动扫描和注册实体类别名,有了这个可以不用写包全名
   typeAliasesPackage: com.iot.**.domain
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mapper/**/*Mapper.xml
   # 加载全局的配置文件
   configLocation: classpath:mybatis/mybatis-config.xml
+  # 注释说明：classpath 指的是编译打包后资源存放路径（如 Maven 的 target/classes 目录）。
+  #           在此配置中，`classpath*:` 表示搜索所有依赖和本项目中的 resources/mapper/**/*.xml 文件。
+  #           `classpath:` 表示从 resources 目录下开始查找指定文件。
+
+
 
 # PageHelper分页插件
 pagehelper:

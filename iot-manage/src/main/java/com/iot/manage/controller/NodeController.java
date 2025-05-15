@@ -49,9 +49,9 @@ public class NodeController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Node node)
     {
-        List<Node> list = nodeService.selectNodeList(node);
-        ExcelUtil<Node> util = new ExcelUtil<Node>(Node.class);
-        util.exportExcel(response, list, "点位管理数据");
+        List<NodeVo> voList = nodeService.selectNodeVoList(node);
+        ExcelUtil<NodeVo> util = new ExcelUtil<NodeVo>(NodeVo.class);
+        util.exportExcel(response, voList, "点位管理数据");
     }
 
     /**

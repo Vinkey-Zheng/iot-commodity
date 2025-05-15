@@ -7,8 +7,8 @@ import java.util.List;
 /**
  * 人员列表Service接口
  *
- * @author itheima
- * @date 2024-06-15
+ * @author zmq
+ * @date 2025-05-15
  */
 public interface IEmpService
 {

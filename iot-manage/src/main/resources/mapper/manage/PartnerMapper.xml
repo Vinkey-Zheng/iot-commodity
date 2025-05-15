@@ -19,6 +19,7 @@
         <result property="remark" column="remark"/>
     </resultMap>
 
+    <!-- 定义一个名为"selectPartnerVo"的SQL片段，用于查询合作伙伴信息 -->
     <sql id="selectPartnerVo">
         select id,
                partner_name,
@@ -57,6 +58,11 @@
         </where>
         GROUP BY p.id
     </select>
+
+    <!--useGeneratedKeys="true"：表示使用数据库自动生成主键。
+    keyProperty="id"：将生成的主键值赋给传入对象的 id 属性。
+    <if> 标签：用于动态 SQL 判断，只有在条件满足时才会包含对应的字段和值。
+    <trim> 标签：用于去除 SQL 中多余的逗号（,），使最终生成的 SQL 合法。-->
 
     <insert id="insertPartner" parameterType="Partner" useGeneratedKeys="true" keyProperty="id">
         insert into tb_partner

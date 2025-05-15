@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * 合作商管理Service业务层处理
  *
- * @author itheima
- * @date 2024-06-05
+ * @author zmq
+ * @date 2025-05-15
  */
 @Service
 public class PartnerServiceImpl implements IPartnerService

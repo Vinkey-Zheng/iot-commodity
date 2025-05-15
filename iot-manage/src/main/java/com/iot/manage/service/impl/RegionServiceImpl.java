@@ -57,6 +57,10 @@ public class RegionServiceImpl implements IRegionService
      * @param region 区域管理
      * @return 结果
      */
+    /**
+     * 开启事务管理，在出现指定异常时回滚（此处配置为所有Exception及其子类异常触发回滚）
+     */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public int insertRegion(Region region)
     {
@@ -89,6 +93,7 @@ public class RegionServiceImpl implements IRegionService
      * @param ids 需要删除的区域管理主键
      * @return 结果
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public int deleteRegionByIds(Long[] ids)
     {
@@ -101,6 +106,7 @@ public class RegionServiceImpl implements IRegionService
      * @param id 区域管理主键
      * @return 结果
      */
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public int deleteRegionById(Long id)
     {
@@ -112,8 +118,8 @@ public class RegionServiceImpl implements IRegionService
      * @param region
      * @return RegionVo集合
      */
+
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public List<RegionVo> selectRegionVoList(Region region) {
-        return regionMapper.selectRegionVoList(region);
-    }
+    public List<RegionVo> selectRegionVoList(Region region){return regionMapper.selectRegionVoList(region);}
 }

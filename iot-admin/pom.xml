@@ -60,28 +60,10 @@
             <groupId>com.iot</groupId>
             <artifactId>iot-generator</artifactId>
         </dependency>
-        <!--  帝可得管理-->
+        <!-- 新增模块manage-->
         <dependency>
             <groupId>com.iot</groupId>
             <artifactId>iot-manage</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iot</groupId>
-            <artifactId>iot-common</artifactId>
-            <version>3.8.7</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.iot</groupId>
-            <artifactId>iot-system</artifactId>
-            <version>3.8.7</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.iot</groupId>
-            <artifactId>iot-framework</artifactId>
-            <version>3.8.7</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.dromara.x-file-storage</groupId>

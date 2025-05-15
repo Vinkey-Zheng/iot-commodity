@@ -50,9 +50,9 @@ public class PartnerController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Partner partner)
     {
-        List<Partner> list = partnerService.selectPartnerList(partner);
-        ExcelUtil<Partner> util = new ExcelUtil<Partner>(Partner.class);
-        util.exportExcel(response, list, "合作商管理数据");
+        List<PartnerVo> volist = partnerService.selectPartnerVoList(partner);
+        ExcelUtil<PartnerVo> util = new ExcelUtil<PartnerVo>(PartnerVo.class);
+        util.exportExcel(response, volist, "合作商管理数据");
     }
 
     /**

@@ -8,9 +8,6 @@ import com.iot.manage.mapper.RegionMapper;
 import com.iot.manage.mapper.RoleMapper;
 import com.iot.manage.service.IEmpService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +37,6 @@ public class EmpServiceImpl implements IEmpService
      * @return 人员列表
      */
     @Override
-    @Cacheable(key = "'emp:' + #id")
     public Emp selectEmpById(Long id)
     {
         return empMapper.selectEmpById(id);
@@ -53,7 +49,6 @@ public class EmpServiceImpl implements IEmpService
      * @return 人员列表
      */
     @Override
-    @Cacheable(key = "'empList:' + #emp")
     public List<Emp> selectEmpList(Emp emp)
     {
         return empMapper.selectEmpList(emp);
@@ -66,7 +61,6 @@ public class EmpServiceImpl implements IEmpService
      * @return 结果
      */
     @Override
-    @CachePut
     public int insertEmp(Emp emp)
     {
         // 补充区域名称
@@ -86,7 +80,6 @@ public class EmpServiceImpl implements IEmpService
      * @return 结果
      */
     @Override
-    @CachePut
     public int updateEmp(Emp emp)
     {
         // 补充区域名称
@@ -106,7 +99,6 @@ public class EmpServiceImpl implements IEmpService
      * @return 结果
      */
     @Override
-    @CacheEvict
     public int deleteEmpByIds(Long[] ids)
     {
         return empMapper.deleteEmpByIds(ids);
@@ -119,7 +111,6 @@ public class EmpServiceImpl implements IEmpService
      * @return 结果
      */
     @Override
-    @CacheEvict
     public int deleteEmpById(Long id)
     {
         return empMapper.deleteEmpById(id);

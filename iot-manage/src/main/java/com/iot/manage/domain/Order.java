@@ -38,13 +38,13 @@ public class Order extends BaseEntity
     @Excel(name = "货道编号")
     private String channelCode;
 
-    /** skuId */
-    @Excel(name = "skuId")
-    private Long skuId;
+    /** itemId */
+    @Excel(name = "itemId")
+    private Long itemId;
 
     /** 商品名称 */
     @Excel(name = "商品名称")
-    private String skuName;
+    private String itemName;
 
     /** 商品类别Id */
     @Excel(name = "商品类别Id")

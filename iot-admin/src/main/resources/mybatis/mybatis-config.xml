@@ -17,21 +17,11 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		 <setting name="mapUnderscoreToCamelCase" value="true"/>
 	</settings>
 
+    <!-- 配置类型别名 -->
     <typeAliases>
-        <!-- 定义别名，指定包下的所有类 -->
-        <package name="com.iot.manage.domain"/>
-        <package name="com.iot.manage.mapper"/>
-        <package name="com.iot.generator.domain"/>
-        <package name="com.iot.generator.mapper"/>
-        <package name="com.iot.framework.domain"/>
-        <package name="com.iot.framework.mapper"/>
-        <package name="com.iot.system.domain"/>
-        <package name="com.iot.system.mapper"/>
-        <package name="com.iot.common.core.domain"/>
-        <package name="com.iot.common.domain"/>
-        <package name="com.iot.common.mapper"/>
-        <package name="com.iot.quartz.domain"/>
-        
+        <!-- 扫描指定包下的所有领域对象，自动为其创建别名 -->
+        <package name="com.iot.**.domain" />
     </typeAliases>
+
 
 </configuration>

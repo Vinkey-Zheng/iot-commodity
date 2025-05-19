@@ -8,5 +8,5 @@ import java.util.List;
 public class ChannelConfigDto {
 
     private String innerCode;// 售货机编号
-    private List<ChannelSkuDto> channelList;// 货道Dto集合
+    private List<ChannelItemDto> channelList;// 货道Dto集合
 }

@@ -1,7 +1,8 @@
 package com.iot.manage.service;
 
+import com.iot.manage.domain.ItemClass;
+
 import java.util.List;
-import com.iot.manage.domain.SkuClass;
 
 /**
  * 商品类型Service接口
@@ -9,7 +10,7 @@ import com.iot.manage.domain.SkuClass;
  * @author itheima
  * @date 2024-07-15
  */
-public interface ISkuClassService 
+public interface IitemClassService
 {
     /**
      * 查询商品类型
@@ -17,31 +18,31 @@ public interface ISkuClassService
      * @param classId 商品类型主键
      * @return 商品类型
      */
-    public SkuClass selectSkuClassByClassId(Long classId);
+    public ItemClass selectItemClassByClassId(Long classId);
 
     /**
      * 查询商品类型列表
      * 
-     * @param skuClass 商品类型
+     * @param itemClass 商品类型
      * @return 商品类型集合
      */
-    public List<SkuClass> selectSkuClassList(SkuClass skuClass);
+    public List<ItemClass> selectItemClassList(ItemClass itemClass);
 
     /**
      * 新增商品类型
      * 
-     * @param skuClass 商品类型
+     * @param itemClass 商品类型
      * @return 结果
      */
-    public int insertSkuClass(SkuClass skuClass);
+    public int insertItemClass(ItemClass itemClass);
 
     /**
      * 修改商品类型
      * 
-     * @param skuClass 商品类型
+     * @param itemClass 商品类型
      * @return 结果
      */
-    public int updateSkuClass(SkuClass skuClass);
+    public int updateItemClass(ItemClass itemClass);
 
     /**
      * 批量删除商品类型
@@ -49,7 +50,7 @@ public interface ISkuClassService
      * @param classIds 需要删除的商品类型主键集合
      * @return 结果
      */
-    public int deleteSkuClassByClassIds(Long[] classIds);
+    public int deleteItemClassByClassIds(Long[] classIds);
 
     /**
      * 删除商品类型信息
@@ -57,5 +58,5 @@ public interface ISkuClassService
      * @param classId 商品类型主键
      * @return 结果
      */
-    public int deleteSkuClassByClassId(Long classId);
+    public int deleteItemClassByClassId(Long classId);
 }

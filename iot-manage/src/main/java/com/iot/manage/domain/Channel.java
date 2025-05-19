@@ -29,7 +29,7 @@ public class Channel extends BaseEntity
 
     /** 商品Id */
     @Excel(name = "商品Id")
-    private Long skuId;
+    private Long itemId;
 
     /** 售货机Id */
     @Excel(name = "售货机Id")
@@ -57,7 +57,7 @@ public class Channel extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("channelCode", getChannelCode())
-            .append("skuId", getSkuId())
+            .append("itemId", getItemId())
             .append("vmId", getVmId())
             .append("innerCode", getInnerCode())
             .append("maxCapacity", getMaxCapacity())

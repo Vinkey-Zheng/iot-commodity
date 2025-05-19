@@ -96,7 +96,7 @@ public class VendingMachineServiceImpl implements IVendingMachineService
         //2. 新增货道
         //2-1 声明货道集合
         List<Channel> channelList = new ArrayList<>();
-        //2-2 双层for循环
+        //2-2 双层for循环， 被批量保存到数据库中
         for (int i = 1; i <=vmType.getVmRow() ; i++) {// 外层行
             for (int j = 1; j <=vmType.getVmCol() ; j++) {// 内层列
                 // 1-1 1-2.. 2-1 2-2 ..
@@ -128,7 +128,8 @@ public class VendingMachineServiceImpl implements IVendingMachineService
         if(vendingMachine.getNodeId()!=null){
             // 查询点位表，补充：区域、点位、合作商等信息
             Node node = nodeService.selectNodeById(vendingMachine.getNodeId());
-            BeanUtil.copyProperties(node,vendingMachine,"id");// 商圈类型、区域、合作商
+            // String...表示可以添加0到多个参数，dProperties表示忽略的属性，可以添加多个
+            BeanUtil.copyProperties(node,vendingMachine,"id");
             vendingMachine.setAddr(node.getAddress());// 设备地址
         }
         vendingMachine.setUpdateTime(DateUtils.getNowDate());// 更新时间
@@ -161,11 +162,11 @@ public class VendingMachineServiceImpl implements IVendingMachineService
 
     /**
      *  根据设备编号查询设备信息
-     * @param innerCode
+     * @param machineCode
      * @return VendingMachine
      */
     @Override
-    public VendingMachine selectVendingMachineByInnerCode(String innerCode) {
-        return vendingMachineMapper.selectVendingMachineByInnerCode(innerCode);
+    public VendingMachine selectVendingMachineByInnerCode(String machineCode) {
+        return vendingMachineMapper.selectVendingMachineByInnerCode(machineCode);
     }
 }

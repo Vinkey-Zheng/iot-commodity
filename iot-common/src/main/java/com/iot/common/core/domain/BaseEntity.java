@@ -26,6 +26,7 @@ public class BaseEntity implements Serializable
     private String createBy;
 
     /** 创建时间 */
+    // 注解：确保在转换为 JSON 或从 JSON 转换回来时使用该格式。
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 

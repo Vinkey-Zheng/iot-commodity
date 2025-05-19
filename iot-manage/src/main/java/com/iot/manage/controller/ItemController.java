@@ -6,8 +6,8 @@ import com.iot.common.core.domain.AjaxResult;
 import com.iot.common.core.page.TableDataInfo;
 import com.iot.common.enums.BusinessType;
 import com.iot.common.utils.poi.ExcelUtil;
-import com.iot.manage.domain.Sku;
-import com.iot.manage.service.ISkuService;
+import com.iot.manage.domain.Item;
+import com.iot.manage.service.IitemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,88 +23,88 @@ import java.util.List;
  * @date 2025-03-20
  */
 @RestController
-@RequestMapping("/manage/sku")
-public class SkuController extends BaseController
+@RequestMapping("/manage/item")
+public class ItemController extends BaseController
 {
     @Autowired
-    private ISkuService skuService;
+    private IitemService itemService;
 
     /**
      * 查询商品管理列表
      */
-    @PreAuthorize("@ss.hasPermi('manage:sku:list')")
+    @PreAuthorize("@ss.hasPermi('manage:item:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Sku sku)
+    public TableDataInfo list(Item item)
     {
         startPage();
-        List<Sku> list = skuService.selectSkuList(sku);
+        List<Item> list = itemService.selectItemList(item);
         return getDataTable(list);
     }
 
     /**
      * 导出商品管理列表
      */
-    @PreAuthorize("@ss.hasPermi('manage:sku:export')")
+    @PreAuthorize("@ss.hasPermi('manage:item:export')")
     @Log(title = "商品管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Sku sku)
+    public void export(HttpServletResponse response, Item item)
     {
-        List<Sku> list = skuService.selectSkuList(sku);
-        ExcelUtil<Sku> util = new ExcelUtil<Sku>(Sku.class);
+        List<Item> list = itemService.selectItemList(item);
+        ExcelUtil<Item> util = new ExcelUtil<Item>(Item.class);
         util.exportEasyExcel(response, list, "商品管理数据");
     }
     /**
      * 导入商品管理列表
      */
-    @PreAuthorize("@ss.hasPermi('manage:sku:add')")
+    @PreAuthorize("@ss.hasPermi('manage:item:add')")
     @Log(title = "商品管理", businessType = BusinessType.IMPORT)
     @PostMapping("/import")
     public AjaxResult excelImport(MultipartFile file)throws Exception{
-        ExcelUtil<Sku> util = new ExcelUtil<Sku>(Sku.class);
-        List<Sku> skuList = util.importEasyExcel(file.getInputStream());
-        return toAjax(skuService.insertSkus(skuList));
+        ExcelUtil<Item> util = new ExcelUtil<Item>(Item.class);
+        List<Item> itemList = util.importEasyExcel(file.getInputStream());
+        return toAjax(itemService.insertItems(itemList));
     }
 
     /**
      * 获取商品管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('manage:sku:query')")
-    @GetMapping(value = "/{skuId}")
-    public AjaxResult getInfo(@PathVariable("skuId") Long skuId)
+    @PreAuthorize("@ss.hasPermi('manage:item:query')")
+    @GetMapping(value = "/{itemId}")
+    public AjaxResult getInfo(@PathVariable("itemId") Long itemId)
     {
-        return success(skuService.selectSkuBySkuId(skuId));
+        return success(itemService.selectItemByItemId(itemId));
     }
 
     /**
      * 新增商品管理
      */
-    @PreAuthorize("@ss.hasPermi('manage:sku:add')")
+    @PreAuthorize("@ss.hasPermi('manage:item:add')")
     @Log(title = "商品管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Sku sku)
+    public AjaxResult add(@RequestBody Item item)
     {
-        return toAjax(skuService.insertSku(sku));
+        return toAjax(itemService.insertItem(item));
     }
 
     /**
      * 修改商品管理
      */
-    @PreAuthorize("@ss.hasPermi('manage:sku:edit')")
+    @PreAuthorize("@ss.hasPermi('manage:item:edit')")
     @Log(title = "商品管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Sku sku)
+    public AjaxResult edit(@RequestBody Item item)
     {
-        return toAjax(skuService.updateSku(sku));
+        return toAjax(itemService.updateItem(item));
     }
 
     /**
      * 删除商品管理
      */
-    @PreAuthorize("@ss.hasPermi('manage:sku:remove')")
+    @PreAuthorize("@ss.hasPermi('manage:item:remove')")
     @Log(title = "商品管理", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{skuIds}")
-    public AjaxResult remove(@PathVariable Long[] skuIds)
+	@DeleteMapping("/{itemIds}")
+    public AjaxResult remove(@PathVariable Long[] itemIds)
     {
-        return toAjax(skuService.deleteSkuBySkuIds(skuIds));
+        return toAjax(itemService.deleteItemByItemIds(itemIds));
     }
 }

@@ -1,17 +1,18 @@
 package com.iot.manage.service.impl;
 
-import java.util.List;
+import com.iot.manage.domain.VmType;
+import com.iot.manage.mapper.VmTypeMapper;
+import com.iot.manage.service.IVmTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.iot.manage.mapper.VmTypeMapper;
-import com.iot.manage.domain.VmType;
-import com.iot.manage.service.IVmTypeService;
+
+import java.util.List;
 
 /**
  * 设备类型管理Service业务层处理
  * 
- * @author itheima
- * @date 2024-06-21
+ * @author zmq
+ * @date 2025-05-19
  */
 @Service
 public class VmTypeServiceImpl implements IVmTypeService 

@@ -22,22 +22,22 @@ import com.iot.common.core.domain.BaseEntity;
 @HeadRowHeight(14)// 注解用于设置表头行的高度
 @HeadFontStyle(fontHeightInPoints = 11)// 注解用于设置表头行的字体样式
 @Data
-public class Sku extends BaseEntity
+public class Item extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 主键 */
-    private Long skuId;
+    private Long itemId;
 
     /** 商品名称 */
     @Excel(name = "商品名称")
     @ExcelProperty("商品名称")
-    private String skuName;
+    private String itemName;
 
     /** 商品图片 */
     @Excel(name = "商品图片")
     @ExcelProperty("商品图片")
-    private String skuImage;
+    private String itemImage;
 
     /** 品牌 */
     @Excel(name = "品牌")
@@ -65,9 +65,9 @@ public class Sku extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("skuId", getSkuId())
-            .append("skuName", getSkuName())
-            .append("skuImage", getSkuImage())
+            .append("itemId", getItemId())
+            .append("itemName", getItemName())
+            .append("itemImage", getItemImage())
             .append("brandName", getBrandName())
             .append("unit", getUnit())
             .append("price", getPrice())

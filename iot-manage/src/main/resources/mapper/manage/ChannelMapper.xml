@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="Channel" id="ChannelResult">
         <result property="id"    column="id"    />
         <result property="channelCode"    column="channel_code"    />
-        <result property="skuId"    column="sku_id"    />
+        <result property="itemId"    column="sku_id"    />
         <result property="vmId"    column="vm_id"    />
         <result property="innerCode"    column="inner_code"    />
         <result property="maxCapacity"    column="max_capacity"    />
@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ChannelVo" id="ChannelVoResult">
         <result property="id"    column="id"    />
         <result property="channelCode"    column="channel_code"    />
-        <result property="skuId"    column="sku_id"    />
+        <result property="itemId"    column="sku_id"    />
         <result property="vmId"    column="vm_id"    />
         <result property="innerCode"    column="inner_code"    />
         <result property="maxCapacity"    column="max_capacity"    />
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="lastSupplyTime"    column="last_supply_time"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
-        <association property="sku" javaType="Sku" column="sku_id" select="selectSkuBySkuId"/>
+        <association property="item" javaType="Item" column="sku_id" select="selectItemByItemId"/>
     </resultMap>
 
     <sql id="selectChannelVo">
@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectChannelVo"/>
         <where>
             <if test="channelCode != null  and channelCode != ''"> and channel_code = #{channelCode}</if>
-            <if test="skuId != null "> and sku_id = #{skuId}</if>
+            <if test="itemId != null "> and sku_id = #{skuId}</if>
             <if test="vmId != null "> and vm_id = #{vmId}</if>
             <if test="innerCode != null  and innerCode != ''"> and inner_code = #{innerCode}</if>
             <if test="maxCapacity != null "> and max_capacity = #{maxCapacity}</if>
@@ -52,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectChannelVo"/>
         where id = #{id}
     </select>
-    <select id="countChannelBySkuIds" resultType="java.lang.Integer">
+    <select id="countChannelByItemIds" resultType="java.lang.Integer">
         select count(1) from tb_channel where sku_id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
@@ -67,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into tb_channel
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="channelCode != null and channelCode != ''">channel_code,</if>
-            <if test="skuId != null">sku_id,</if>
+            <if test="itemId != null">sku_id,</if>
             <if test="vmId != null">vm_id,</if>
             <if test="innerCode != null and innerCode != ''">inner_code,</if>
             <if test="maxCapacity != null">max_capacity,</if>
@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="channelCode != null and channelCode != ''">#{channelCode},</if>
-            <if test="skuId != null">#{skuId},</if>
+            <if test="itemId != null">#{skuId},</if>
             <if test="vmId != null">#{vmId},</if>
             <if test="innerCode != null and innerCode != ''">#{innerCode},</if>
             <if test="maxCapacity != null">#{maxCapacity},</if>
@@ -104,7 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update tb_channel
         <trim prefix="SET" suffixOverrides=",">
             <if test="channelCode != null and channelCode != ''">channel_code = #{channelCode},</if>
-            <if test="skuId != null">sku_id = #{skuId},</if>
+            <if test="itemId != null">sku_id = #{skuId},</if>
             <if test="vmId != null">vm_id = #{vmId},</if>
             <if test="innerCode != null and innerCode != ''">inner_code = #{innerCode},</if>
             <if test="maxCapacity != null">max_capacity = #{maxCapacity},</if>
@@ -121,7 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             UPDATE tb_channel
             <trim prefix="SET" suffixOverrides=",">
                 <if test="channel.channelCode != null and channel.channelCode != ''">channel_code = #{channel.channelCode},</if>
-                <if test="channel.skuId != null">sku_id = #{channel.skuId},</if>
+                <if test="channel.itemId != null">sku_id = #{channel.skuId},</if>
                 <if test="channel.vmId != null">vm_id = #{channel.vmId},</if>
                 <if test="channel.innerCode != null and channel.innerCode != ''">inner_code = #{channel.innerCode},</if>
                 <if test="channel.maxCapacity != null">max_capacity = #{channel.maxCapacity},</if>

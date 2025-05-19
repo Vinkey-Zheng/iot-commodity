@@ -72,10 +72,10 @@ public interface ChannelMapper
 
     /**
      * 根据商品id集合统计货道数量
-     * @param skuIds
+     * @param itemIds
      * @return 统计结果
      */
-    int countChannelBySkuIds(Long[] skuIds);
+    int countChannelByItemIds(Long[] itemIds);
 
     /**
      * 根据售货机编号查询货道列表

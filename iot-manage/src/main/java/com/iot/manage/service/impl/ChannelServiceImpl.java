@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 /**
  * 售货机货道Service业务层处理
  *
- * @author itheima
- * @date 2024-06-21
+ * @author zmq
+ * @date 2025-05-19
  */
 @Service
 public class ChannelServiceImpl implements IChannelService {
@@ -105,12 +105,12 @@ public class ChannelServiceImpl implements IChannelService {
     /**
      * 根据商品id集合统计货道数量
      *
-     * @param skuIds
+     * @param itemIds
      * @return 统计结果
      */
     @Override
-    public int countChannelBySkuIds(Long[] skuIds) {
-        return channelMapper.countChannelBySkuIds(skuIds);
+    public int countChannelByItemIds(Long[] itemIds) {
+        return channelMapper.countChannelByItemIds(itemIds);
     }
 
     /**
@@ -137,7 +137,7 @@ public class ChannelServiceImpl implements IChannelService {
             Channel channel = channelMapper.getChannelInfo(dto.getInnerCode(), dto.getChannelCode());
             if (channel != null) {
                 // 关联最新商品id
-                channel.setSkuId(dto.getSkuId());
+                channel.setItemId(dto.getItemId());
                 // 货道修改时间
                 channel.setUpdateTime(DateUtils.getNowDate());
             }

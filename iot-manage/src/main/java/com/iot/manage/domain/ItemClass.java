@@ -13,7 +13,7 @@ import com.iot.common.core.domain.BaseEntity;
  * @date 2025-03-20
  */
 @Data
-public class SkuClass extends BaseEntity
+public class ItemClass extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -21,6 +21,8 @@ public class SkuClass extends BaseEntity
     private Long classId;
 
     /** 商品类型 */
+    // @Excel(name = "商品类型") 注解用于标记该字段在导出 Excel 表格时对应的列名，
+    // 此处表示将 className 字段导出为 Excel 列，列标题为“商品类型”。
     @Excel(name = "商品类型")
     private String className;
 

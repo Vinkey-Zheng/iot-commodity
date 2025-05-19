@@ -6,8 +6,8 @@ import com.iot.common.core.domain.AjaxResult;
 import com.iot.common.core.page.TableDataInfo;
 import com.iot.common.enums.BusinessType;
 import com.iot.common.utils.poi.ExcelUtil;
-import com.iot.manage.domain.SkuClass;
-import com.iot.manage.service.ISkuClassService;
+import com.iot.manage.domain.ItemClass;
+import com.iot.manage.service.IitemClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -22,77 +22,77 @@ import java.util.List;
  * @date 2025-03-21
  */
 @RestController
-@RequestMapping("/manage/skuClass")
-public class SkuClassController extends BaseController
+@RequestMapping("/manage/itemClass")
+public class ItemClassController extends BaseController
 {
     @Autowired
-    private ISkuClassService skuClassService;
+    private IitemClassService itemClassService;
 
     /**
      * 查询商品类型列表
      */
-    @PreAuthorize("@ss.hasPermi('manage:skuClass:list')")
+    @PreAuthorize("@ss.hasPermi('manage:itemClass:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SkuClass skuClass)
+    public TableDataInfo list(ItemClass itemClass)
     {
         startPage();
-        List<SkuClass> list = skuClassService.selectSkuClassList(skuClass);
+        List<ItemClass> list = itemClassService.selectItemClassList(itemClass);
         return getDataTable(list);
     }
 
     /**
      * 导出商品类型列表
      */
-    @PreAuthorize("@ss.hasPermi('manage:skuClass:export')")
+    @PreAuthorize("@ss.hasPermi('manage:itemClass:export')")
     @Log(title = "商品类型", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SkuClass skuClass)
+    public void export(HttpServletResponse response, ItemClass itemClass)
     {
-        List<SkuClass> list = skuClassService.selectSkuClassList(skuClass);
-        ExcelUtil<SkuClass> util = new ExcelUtil<SkuClass>(SkuClass.class);
+        List<ItemClass> list = itemClassService.selectItemClassList(itemClass);
+        ExcelUtil<ItemClass> util = new ExcelUtil<ItemClass>(ItemClass.class);
         util.exportExcel(response, list, "商品类型数据");
     }
 
     /**
      * 获取商品类型详细信息
      */
-    @PreAuthorize("@ss.hasPermi('manage:skuClass:query')")
+    @PreAuthorize("@ss.hasPermi('manage:itemClass:query')")
     @GetMapping(value = "/{classId}")
     public AjaxResult getInfo(@PathVariable("classId") Long classId)
     {
-        return success(skuClassService.selectSkuClassByClassId(classId));
+        return success(itemClassService.selectItemClassByClassId(classId));
     }
 
     /**
      * 新增商品类型
      */
-    @PreAuthorize("@ss.hasPermi('manage:skuClass:add')")
+    @PreAuthorize("@ss.hasPermi('manage:itemClass:add')")
     @Log(title = "商品类型", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SkuClass skuClass)
+    public AjaxResult add(@RequestBody ItemClass itemClass)
     {
-        return toAjax(skuClassService.insertSkuClass(skuClass));
+        return toAjax(itemClassService.insertItemClass(itemClass));
     }
 
     /**
      * 修改商品类型
      */
-    @PreAuthorize("@ss.hasPermi('manage:skuClass:edit')")
+    @PreAuthorize("@ss.hasPermi('manage:itemClass:edit')")
     @Log(title = "商品类型", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SkuClass skuClass)
+    public AjaxResult edit(@RequestBody ItemClass itemClass)
     {
-        return toAjax(skuClassService.updateSkuClass(skuClass));
+        return toAjax(itemClassService.updateItemClass(itemClass));
     }
 
     /**
      * 删除商品类型
      */
-    @PreAuthorize("@ss.hasPermi('manage:skuClass:remove')")
+    @PreAuthorize("@ss.hasPermi('manage:itemClass:remove')")
     @Log(title = "商品类型", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{classIds}")
     public AjaxResult remove(@PathVariable Long[] classIds)
     {
-        return toAjax(skuClassService.deleteSkuClassByClassIds(classIds));
+        return toAjax(itemClassService.deleteItemClassByClassIds(classIds));
     }
 }

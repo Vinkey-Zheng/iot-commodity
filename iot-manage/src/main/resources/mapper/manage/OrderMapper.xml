@@ -10,8 +10,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="thirdNo"    column="third_no"    />
         <result property="innerCode"    column="inner_code"    />
         <result property="channelCode"    column="channel_code"    />
-        <result property="skuId"    column="sku_id"    />
-        <result property="skuName"    column="sku_name"    />
+        <result property="itemId"    column="sku_id"    />
+        <result property="itemName"    column="sku_name"    />
         <result property="classId"    column="class_id"    />
         <result property="status"    column="status"    />
         <result property="amount"    column="amount"    />
@@ -62,8 +62,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="thirdNo != null">third_no,</if>
             <if test="innerCode != null">inner_code,</if>
             <if test="channelCode != null">channel_code,</if>
-            <if test="skuId != null">sku_id,</if>
-            <if test="skuName != null">sku_name,</if>
+            <if test="itemId != null">sku_id,</if>
+            <if test="itemName != null">sku_name,</if>
             <if test="classId != null">class_id,</if>
             <if test="status != null">status,</if>
             <if test="amount != null">amount,</if>
@@ -89,8 +89,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="thirdNo != null">#{thirdNo},</if>
             <if test="innerCode != null">#{innerCode},</if>
             <if test="channelCode != null">#{channelCode},</if>
-            <if test="skuId != null">#{skuId},</if>
-            <if test="skuName != null">#{skuName},</if>
+            <if test="itemId != null">#{skuId},</if>
+            <if test="itemName != null">#{skuName},</if>
             <if test="classId != null">#{classId},</if>
             <if test="status != null">#{status},</if>
             <if test="amount != null">#{amount},</if>
@@ -119,8 +119,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="thirdNo != null">third_no = #{thirdNo},</if>
             <if test="innerCode != null">inner_code = #{innerCode},</if>
             <if test="channelCode != null">channel_code = #{channelCode},</if>
-            <if test="skuId != null">sku_id = #{skuId},</if>
-            <if test="skuName != null">sku_name = #{skuName},</if>
+            <if test="itemId != null">sku_id = #{skuId},</if>
+            <if test="itemName != null">sku_name = #{skuName},</if>
             <if test="classId != null">class_id = #{classId},</if>
             <if test="status != null">status = #{status},</if>
             <if test="amount != null">amount = #{amount},</if>

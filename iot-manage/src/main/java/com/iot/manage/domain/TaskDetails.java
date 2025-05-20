@@ -44,17 +44,17 @@ public class TaskDetails extends BaseEntity implements Serializable
     /** 商品Id */
     @ApiModelProperty(value = "商品Id")
     @Excel(name = "商品Id")
-    private Long skuId;
+    private Long itemId;
 
     /** 商品名称 */
     @ApiModelProperty(value = "商品名称")
-    @Excel(name = "商品名称", readConverterExp = "skuName=${comment}")
-    private String skuName;
+    @Excel(name = "商品名称", readConverterExp = "itemName=${comment}")
+    private String itemName;
 
     /** 商品图片 */
     @ApiModelProperty(value = "商品图片")
-    @Excel(name = "商品图片", readConverterExp = "skuImage=${comment}")
-    private String skuImage;
+    @Excel(name = "商品图片", readConverterExp = "itemImage=${comment}")
+    private String itemImage;
 
     @Override
     public String toString() {
@@ -63,9 +63,9 @@ public class TaskDetails extends BaseEntity implements Serializable
             .append("taskId", getTaskId())
             .append("channelCode", getChannelCode())
             .append("expectCapacity", getExpectCapacity())
-            .append("skuId", getSkuId())
-            .append("skuName", getSkuName())
-            .append("skuImage", getSkuImage())
+            .append("itemId", getItemId())
+            .append("itemName", getItemName())
+            .append("itemImage", getItemImage())
             .toString();
     }
 }

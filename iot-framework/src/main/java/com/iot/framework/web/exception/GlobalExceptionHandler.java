@@ -37,7 +37,7 @@ public class GlobalExceptionHandler
     {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',权限校验失败'{}'", requestURI, e.getMessage());
-        return AjaxResult.error(HttpStatus.FORBIDDEN, "没有权限，请联系管理员授权");
+        return AjaxResult.error(String.valueOf(HttpStatus.FORBIDDEN), "没有权限，请联系管理员授权");
     }
 
     /**
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler
     {
         log.error(e.getMessage(), e);
         Integer code = e.getCode();
-        return StringUtils.isNotNull(code) ? AjaxResult.error(code, e.getMessage()) : AjaxResult.error(e.getMessage());
+        return StringUtils.isNotNull(code) ? AjaxResult.error(String.valueOf(code), e.getMessage()) : AjaxResult.error(e.getMessage());
     }
 
     /**
@@ -144,13 +144,20 @@ public class GlobalExceptionHandler
     @ExceptionHandler(DataIntegrityViolationException.class)
     public AjaxResult handleDataIntegrityViolationException(DataIntegrityViolationException e)
     {
+        // 记录异常信息
         log.error(e.getMessage(), e);
+
+        // 判断异常消息是否包含特定关键词，以提供更具体的错误信息
         if(e.getMessage().contains("foreign")){
+            // 如果异常消息包含"foreign"，表示有外键约束导致的删除失败
             return AjaxResult.error("无法删除，有其他数据引用");
         }
         if(e.getMessage().contains("Duplicate")){
+            // 如果异常消息包含"Duplicate"，表示有重复值约束导致的保存失败
             return AjaxResult.error("无法保存，名称已存在");
         }
+
+        // 如果异常消息不包含上述关键词，则返回通用错误信息
         return AjaxResult.error("数据完整性异常，请联系管理员");
     }
 }

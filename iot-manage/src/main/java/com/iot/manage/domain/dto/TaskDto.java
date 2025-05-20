@@ -14,4 +14,5 @@ public class TaskDto {
     private Long productTypeId;// 工单类型
     private String desc;// 描述信息
     private List<TaskDetailsDto> details;// 工单详情（只有补货工单才涉及）
+    // 他们在同一个包下面，并且TaskDetailsDto类是公共类
 }

@@ -1,13 +1,16 @@
 package com.iot.common.core.domain;
 
-import java.io.Serializable;
 import com.iot.common.constant.HttpStatus;
+import lombok.Data;
+import java.io.Serializable;
 
 /**
  * 响应信息主体
  *
- * @author ruoyi
+ * @author zmq
+ * @date 2025-05-20
  */
+@Data
 public class R<T> implements Serializable
 {
     private static final long serialVersionUID = 1L;
@@ -71,36 +74,6 @@ public class R<T> implements Serializable
         apiResult.setData(data);
         apiResult.setMsg(msg);
         return apiResult;
-    }
-
-    public int getCode()
-    {
-        return code;
-    }
-
-    public void setCode(int code)
-    {
-        this.code = code;
-    }
-
-    public String getMsg()
-    {
-        return msg;
-    }
-
-    public void setMsg(String msg)
-    {
-        this.msg = msg;
-    }
-
-    public T getData()
-    {
-        return data;
-    }
-
-    public void setData(T data)
-    {
-        this.data = data;
     }
 
     public static <T> Boolean isError(R<T> ret)

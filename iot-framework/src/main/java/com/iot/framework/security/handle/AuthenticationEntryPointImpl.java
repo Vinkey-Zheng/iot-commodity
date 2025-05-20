@@ -42,6 +42,6 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, S
         // 构建错误消息，包括尝试访问的URI
         String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", request.getRequestURI());
         // 使用JSON格式向客户端返回错误信息
-        ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.error(code, msg)));
+        ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.error(String.valueOf(code), msg)));
     }
 }

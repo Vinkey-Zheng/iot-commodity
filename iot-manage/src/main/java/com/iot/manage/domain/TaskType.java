@@ -17,7 +17,7 @@ public class TaskType extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 工单类型ID */
     private Long typeId;
 
     /** 类型名称 */

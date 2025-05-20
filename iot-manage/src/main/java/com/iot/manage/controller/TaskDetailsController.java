@@ -114,6 +114,8 @@ public class TaskDetailsController extends BaseController {
     @ApiOperation(value = "查看工单补货详情", notes = "根据工单ID获取工单补货详情")
     @GetMapping( "/byTaskId/{taskId}")
     public R<List<TaskDetails>> byTaskId(
+            // @PathVariable Long taskId：从URL路径中提取名为taskId的路径变量，类型为Long。
+            //@ApiParam(value = "工单ID", required = true)：Swagger注解，说明该参数是“工单ID”，且为必填项。
             @ApiParam(value = "工单ID", required = true) @PathVariable Long taskId) {
         TaskDetails taskDetails = new TaskDetails();
         taskDetails.setTaskId(taskId);

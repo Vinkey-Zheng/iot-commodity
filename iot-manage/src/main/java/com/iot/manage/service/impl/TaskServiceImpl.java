@@ -38,6 +38,18 @@ public class TaskServiceImpl implements ITaskService {
     @Autowired
     private TaskMapper taskMapper;
 
+    @Autowired
+    private IVendingMachineService vendingMachineService;
+
+    @Autowired
+    private IEmpService empService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private ITaskDetailsService taskDetailsService;
+
     /**
      * 查询工单
      *
@@ -117,18 +129,6 @@ public class TaskServiceImpl implements ITaskService {
         return taskMapper.selectTaskVoList(task);
     }
 
-    @Autowired
-    private IVendingMachineService vendingMachineService;
-
-    @Autowired
-    private IEmpService empService;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
-
-    @Autowired
-    private ITaskDetailsService taskDetailsService;
-
     /**
      * 新增运营、运维工单
      *
@@ -200,7 +200,7 @@ public class TaskServiceImpl implements ITaskService {
             throw new ServiceException("该工单已取消了，不能再次取消");
         }
         // 判断工单状态是否为已完成，如果是，则抛出异常
-        if (taskDb.getTaskStatus().equals(IoTContants.TASK_STATUS_FINISH)) {
+        else if (taskDb.getTaskStatus().equals(IoTContants.TASK_STATUS_FINISH)) {
             throw new ServiceException("该工单已完成了，不能取消");
         }
         //2. 设置更新字段

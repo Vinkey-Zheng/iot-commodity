@@ -46,7 +46,7 @@ public class CaptchaController
     @GetMapping("/captchaImage")
     public AjaxResult getCode(HttpServletResponse response) throws IOException
     {
-        AjaxResult ajax = AjaxResult.success();
+        AjaxResult ajax = AjaxResult.success(null);
         boolean captchaEnabled = configService.selectCaptchaEnabled();
         ajax.put("captchaEnabled", captchaEnabled);
         if (!captchaEnabled)
@@ -76,33 +76,7 @@ public class CaptchaController
             image = captchaProducer.createImage(capStr);
         }
 
-        // 防击穿：使用互斥锁
-        String lockKey = verifyKey + "_lock";
-        boolean locked = redisCache.setIfAbsent(lockKey, "locked", 5); // 设置5秒锁
-
-        try {
-            if (locked) {
-                // 防雪崩：添加随机过期时间
-                Integer randomExpire = Constants.CAPTCHA_EXPIRATION * 60 + (int)(Math.random() * 60); // 基础时间 + 随机60秒
-                redisCache.setCacheObject(verifyKey, code, randomExpire, TimeUnit.SECONDS);
-            } else {
-                // 等待锁释放
-                Thread.sleep(100);
-                // 重试获取缓存
-                code = (String) redisCache.getCacheObject(verifyKey);
-                if (code == null) {
-                    throw new RuntimeException("验证码生成失败");
-                }
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("验证码生成中断", e);
-        } finally {
-            if (locked) {
-                redisCache.deleteObject(lockKey);
-            }
-        }
-
+        redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try

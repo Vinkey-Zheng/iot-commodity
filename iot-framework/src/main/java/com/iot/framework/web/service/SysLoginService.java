@@ -124,50 +124,18 @@ public class SysLoginService
         {
             // 构建验证码的缓存键
             String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
-            // 获取redis缓存中的验证码
+            // 从redis缓存中获取验证码
             String captcha = redisCache.getCacheObject(verifyKey);
-            // 假设基础过期时间为300秒（5分钟），随机范围为60秒，防雪崩操作
-            redisCache.setWithRandomExpire(verifyKey, captcha, 300, 60);
-
-            // 双重检查防止缓存击穿
-            // 如果验证码不存在，则尝试从缓存中获取
-            if (captcha == null) {
-                // 获取分布式锁
-                String lockKey = verifyKey + "_lock";
-                boolean locked = redisCache.setIfAbsent(lockKey, "locked", 5); // 设置5秒锁
-                try {
-                    if (locked) {
-                        // 再次检查缓存
-                        captcha = redisCache.getCacheObject(verifyKey);
-                        if (captcha == null) {
-                            // 记录验证码已失效日志信息
-                            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
-                            // 抛出验证码已失效异常
-                            throw new CaptchaExpireException();
-                        }
-                    }
-                    else {
-                        // 等待锁释放
-                        Thread.sleep(100);
-                        captcha = redisCache.getCacheObject(verifyKey);
-                        if (captcha == null) {
-                            throw new CaptchaExpireException();
-                        }
-                    }
-                }
-                catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new ServiceException("验证码校验中断");
-                }finally {
-                    if (locked) {
-                        redisCache.deleteObject(lockKey);
-                    }
-                }
-            }
-
             // 删除redis缓存中的验证码
             redisCache.deleteObject(verifyKey);
-
+            // 验证码不存在时，抛出验证码过期异常
+            if (captcha == null)
+            {
+                // 记录验证码已失效日志信息
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
+                // 抛出验证码已失效异常
+                throw new CaptchaExpireException();
+            }
             // 验证用户提交的验证码与缓存中的验证码是否匹配（不区分大小写）
             if (!code.equalsIgnoreCase(captcha))
             {

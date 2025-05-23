@@ -63,63 +63,55 @@ public class SysPasswordService
 
         // 获取缓存键
         String cacheKey = getCacheKey(username);
-
-        // 防击穿：使用互斥锁
+        //  获取锁定键
         String lockKey = cacheKey + "_lock";
-        boolean locked = redisCache.setIfAbsent(lockKey, "locked", 5); // 设置5秒锁
+        boolean locked = redisCache.setIfAbsent(lockKey, "locked", 5);// 设置5秒锁
 
         try {
+            // 检查账户是否已被锁定
             if (locked) {
-                // 尝试从缓存中获取当前用户的密码重试次数
+                // 从缓存中获取当前的重试次数
                 Integer retryCount = redisCache.getCacheObject(cacheKey);
-
-                // 如果缓存中没有重试次数，初始化为0
-                if (retryCount == null)
-                {
+                // 如果重试次数为空，初始化为0
+                if (retryCount == null) {
                     retryCount = 0;
                 }
 
-                // 检查重试次数是否已经达到或超过最大重试次数
-                if (retryCount >= Integer.valueOf(maxRetryCount).intValue())
-                {
-                    // 如果达到最大重试次数，抛出异常，并指定锁定时间
+                // 如果重试次数达到最大限制，抛出异常，阻止登录
+                if (retryCount >= maxRetryCount) {
                     throw new UserPasswordRetryLimitExceedException(maxRetryCount, lockTime);
                 }
 
-                // 检查用户提供的密码是否与数据库中的密码匹配
-                if (!matches(user, password))
-                {
-                    // 如果密码不匹配，增加重试计数
-                    retryCount = retryCount + 1;
-                    // 防雪崩：设置随机过期时间
-                    Integer randomLockTime = lockTime * 60 + (int)(Math.random() * 60); // 添加随机60秒
-                    // 更新缓存中的重试次数，并设置锁定时间
-                    redisCache.setCacheObject(cacheKey, retryCount, randomLockTime, TimeUnit.SECONDS);
-                    // 抛出密码不匹配异常
+                // 如果密码不匹配，增加重试次数并更新缓存，然后抛出异常
+                if (!matches(user, password)) {
+                    retryCount++;
+                    // 固定过期时间，无需随机
+                    redisCache.setCacheObject(cacheKey, retryCount, lockTime * 60, TimeUnit.SECONDS);
                     throw new UserPasswordNotMatchException();
-                }
-                else
-                {
+                } else {
                     // 如果密码匹配，清除登录记录缓存
                     clearLoginRecordCache(username);
                 }
             } else {
-                // 等待锁释放
+                // 如果账户未被锁定，短暂休眠后再次检查重试次数
                 Thread.sleep(100);
-                // 重试获取缓存
                 Integer retryCount = redisCache.getCacheObject(cacheKey);
+                // 如果重试次数达到最大限制，抛出异常，阻止登录
                 if (retryCount != null && retryCount >= maxRetryCount) {
                     throw new UserPasswordRetryLimitExceedException(maxRetryCount, lockTime);
                 }
             }
         } catch (InterruptedException e) {
+            // 捕获中断异常，恢复中断状态，并抛出运行时异常
             Thread.currentThread().interrupt();
             throw new RuntimeException("密码验证中断", e);
         } finally {
+            // 释放锁，确保公平性
             if (locked) {
                 redisCache.deleteObject(lockKey);
             }
         }
+
     }
 
     public boolean matches(SysUser user, String rawPassword)

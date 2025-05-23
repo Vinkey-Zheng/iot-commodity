@@ -41,4 +41,9 @@ public class CacheConstants
      * 登录账户密码错误次数 redis key
      */
     public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
+
+    /**
+     * 系统参数缓存前缀（按 ID 存储）
+     */
+    public static final String SYS_CONFIG_ID_KEY =  "sys_config_id:";
 }

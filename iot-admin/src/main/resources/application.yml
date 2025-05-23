@@ -91,6 +91,26 @@ spring:
     type: caffeine
     caffeine:
       spec: initialCapacity=10,maximumSize=1000,expireAfterWrite=5m
+  # Kafka 配置
+  kafka:
+    bootstrap-servers: localhost:9092 # Kafka服务器地址，多个地址可以用逗号分隔
+    producer:
+      # 生产者配置
+      acks: all # 消息确认机制
+      retries: 3 # 重试次数
+      retry-backoff-ms: 1000 # 重试间隔时间
+      props:
+        key.serializer: org.apache.kafka.common.serialization.StringSerializer # Key序列化方式
+        value.serializer: org.apache.kafka.common.serialization.StringSerializer # Value序列化方式
+    consumer:
+      # 消费者配置
+      group-id: default-group # 消费者组ID
+      auto-offset-reset: earliest # 偏移量重置策略
+      enable-auto-commit: false # 是否启用自动提交
+      props:
+        key.deserializer: org.apache.kafka.common.serialization.StringDeserializer # Key反序列化方式
+        value.deserializer: org.apache.kafka.common.serialization.StringDeserializer # Value反序列化方式
+
 
 # token配置
 token:
@@ -136,6 +156,8 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+
  # 文件上传
 #dromara:
 #  x-file-storage: #文件存储配置

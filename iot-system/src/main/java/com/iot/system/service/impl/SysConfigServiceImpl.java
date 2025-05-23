@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * 参数配置 服务层实现
  *
- * @author ruoyi
+ * @author zmq
  */
 @Service
 public class SysConfigServiceImpl implements ISysConfigService
@@ -93,6 +93,9 @@ public class SysConfigServiceImpl implements ISysConfigService
                     // 如果数据库中存在该配置，则将其存入缓存中，并返回配置值
                     redisCache.setCacheObject(getCacheKey(configKey), retConfig.getConfigValue(), randomExpire, TimeUnit.SECONDS);
                     return retConfig.getConfigValue();
+                } else {
+                    // 防穿透：缓存空值，避免重复查询不存在的数据
+                    redisCache.setCacheObject(getCacheKey(configKey), "", 60, TimeUnit.SECONDS);
                 }
             } else {
                 // 等待锁释放
@@ -121,20 +124,55 @@ public class SysConfigServiceImpl implements ISysConfigService
      * @return true开启，false关闭
      */
     @Override
-    public boolean selectCaptchaEnabled()
-    {
-        // 从参数配置中获取验证码启用状态
-        String captchaEnabled = selectConfigByKey("sys.account.captchaEnabled");
+    public boolean selectCaptchaEnabled() {
+        String configKey = "sys.account.captchaEnabled";
+        String lockKey = getCacheKey(configKey) + "_lock";
 
-        // 如果获取的配置值为空或未设置，则默认启用验证码
-        if (StringUtils.isEmpty(captchaEnabled))
-        {
-            return true;
+        // 防击穿：尝试获取锁
+        boolean locked = redisCache.setIfAbsent(lockKey, "locked", 5); // 设置5秒锁
+
+        try {
+            if (locked) {
+                // 1. 先从缓存获取
+                String captchaEnabled = Convert.toStr(redisCache.getCacheObject(getCacheKey(configKey)));
+                if (StringUtils.isNotEmpty(captchaEnabled)) {
+                    return Convert.toBool(captchaEnabled);
+                }
+
+                // 2. 缓存未命中，查询数据库
+                SysConfig config = new SysConfig();
+                config.setConfigKey(configKey);
+                SysConfig retConfig = configMapper.selectConfig(config);
+
+                if (retConfig != null) {
+                    // 防雪崩：添加随机过期时间
+                    Integer randomExpire = 300 + (int)(Math.random() * 60);
+                    redisCache.setCacheObject(getCacheKey(configKey), retConfig.getConfigValue(), randomExpire, TimeUnit.SECONDS);
+                    return Convert.toBool(retConfig.getConfigValue());
+                }else{
+                    // 防击穿：缓存空值，避免重复查询不存在的数据
+                    redisCache.setCacheObject(getCacheKey(configKey), "", 60, TimeUnit.SECONDS);
+                }
+            } else {
+                // 等待锁释放后重试
+                Thread.sleep(100);
+                String captchaEnabled = Convert.toStr(redisCache.getCacheObject(getCacheKey(configKey)));
+                if (StringUtils.isNotEmpty(captchaEnabled)) {
+                    return Convert.toBool(captchaEnabled);
+                }
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new ServiceException("验证码配置获取中断");
+        } finally {
+            if (locked) {
+                redisCache.deleteObject(lockKey); // 释放锁
+            }
         }
-
-        // 将配置值转换为布尔类型并返回
-        return Convert.toBool(captchaEnabled);
+        // 默认启用验证码
+        return true;
     }
+
 
     /**
      * 查询参数配置列表

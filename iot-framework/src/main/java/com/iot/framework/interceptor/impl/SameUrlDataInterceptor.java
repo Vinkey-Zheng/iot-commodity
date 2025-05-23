@@ -66,51 +66,19 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor
         // 唯一标识（指定key + url + 消息头）
         String cacheRepeatKey = CacheConstants.REPEAT_SUBMIT_KEY + url + submitKey;
 
-        // 防击穿：使用互斥锁
-        String lockKey = CacheConstants.LOGIN_TOKEN_KEY + "_lock";
-        boolean locked = redisCache.setIfAbsent(lockKey, "locked", 5); // 设置5秒锁
-        try {
-            if (locked) {
-                Object sessionObj = redisCache.getCacheObject(cacheRepeatKey);
-                // 防雪崩：添加随机过期时间
-                redisCache.setWithRandomExpire(cacheRepeatKey, sessionObj, 300, 60);
-                if (sessionObj != null)
+        Object sessionObj = redisCache.getCacheObject(cacheRepeatKey);
+        if (sessionObj != null)
+        {
+            Map<String, Object> sessionMap = (Map<String, Object>) sessionObj;
+            if (sessionMap.containsKey(url))
+            {
+                Map<String, Object> preDataMap = (Map<String, Object>) sessionMap.get(url);
+                if (compareParams(nowDataMap, preDataMap) && compareTime(nowDataMap, preDataMap, annotation.interval()))
                 {
-                    Map<String, Object> sessionMap = (Map<String, Object>) sessionObj;
-                    if (sessionMap.containsKey(url))
-                    {
-                        Map<String, Object> preDataMap = (Map<String, Object>) sessionMap.get(url);
-                        if (compareParams(nowDataMap, preDataMap) && compareTime(nowDataMap, preDataMap, annotation.interval()))
-                        {
-                            return true;
-                        }
-                    }
+                    return true;
                 }
-            } else {
-                // 等待锁释放
-                Thread.sleep(100);
-                // 重试获取缓存
-                Object sessionObj = redisCache.getCacheObject(cacheRepeatKey);
-                if (sessionObj != null) {
-                    Map<String, Object> sessionMap = (Map<String, Object>) sessionObj;
-                    if (sessionMap.containsKey(url)) {
-                        Map<String, Object> preDataMap = (Map<String, Object>) sessionMap.get(url);
-                        if (compareParams(nowDataMap, preDataMap) && compareTime(nowDataMap, preDataMap, annotation.interval())) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("请求处理中断", e);
-        } finally {
-            if (locked) {
-                redisCache.deleteObject(lockKey);
             }
         }
-
-
         Map<String, Object> cacheMap = new HashMap<String, Object>();
         cacheMap.put(url, nowDataMap);
         redisCache.setCacheObject(cacheRepeatKey, cacheMap, annotation.interval(), TimeUnit.MILLISECONDS);

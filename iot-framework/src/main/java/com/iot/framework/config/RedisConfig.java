@@ -20,24 +20,36 @@ public class RedisConfig extends CachingConfigurerSupport
 {
     @Bean
     @SuppressWarnings(value = { "unchecked", "rawtypes" })
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory)
-    {
-        RedisTemplate<Object, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
+    /**
+ * 配置RedisTemplate以定义键值对的序列化方式
+ *
+ * @param connectionFactory Redis连接工厂，用于创建Redis连接
+ * @return 配置好的RedisTemplate实例，用于操作Redis
+ */
+public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory)
+{
+    // 创建RedisTemplate实例
+    RedisTemplate<Object, Object> template = new RedisTemplate<>();
+    // 设置连接工厂
+    template.setConnectionFactory(connectionFactory);
 
-        FastJson2JsonRedisSerializer serializer = new FastJson2JsonRedisSerializer(Object.class);
+    // 创建一个FastJson2JsonRedisSerializer实例，用于序列化和反序列化Object类型的值
+    FastJson2JsonRedisSerializer serializer = new FastJson2JsonRedisSerializer(Object.class);
 
-        // 使用StringRedisSerializer来序列化和反序列化redis的key值
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(serializer);
+    // 使用StringRedisSerializer来序列化和反序列化redis的key值
+    template.setKeySerializer(new StringRedisSerializer());
+    template.setValueSerializer(serializer);
 
-        // Hash的key也采用StringRedisSerializer的序列化方式
-        template.setHashKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(serializer);
+    // Hash的key也采用StringRedisSerializer的序列化方式
+    template.setHashKeySerializer(new StringRedisSerializer());
+    template.setHashValueSerializer(serializer);
 
-        template.afterPropertiesSet();
-        return template;
-    }
+    // 初始化RedisTemplate
+    template.afterPropertiesSet();
+    // 返回配置好的RedisTemplate实例
+    return template;
+}
+
 
     @Bean
     public DefaultRedisScript<Long> limitScript()
